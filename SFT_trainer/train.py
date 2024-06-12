@@ -103,6 +103,7 @@ def main():
         formatting_func=lambda example: formatting_prompts_func(example, generated_prompt=generated_prompt),
         data_collator=data_collator
         )
+    
     print("-- 입력 프롬프트 ----------\n\n", generated_prompt, "\n\n-- 학습 설정 ----------")
     print(json.dumps(asdict(training_mode_args), indent=0)[1:-1])
     print(json.dumps(asdict(model_args), indent=0)[1:-1])
