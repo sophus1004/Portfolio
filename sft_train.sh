@@ -7,8 +7,9 @@ python SFT_trainer/train.py \
    --use_qlora False \
    --gradient_checkpointing False \
    --data_name_or_path maywell/ko_wikidata_QA \
-   --model_name_or_path EleutherAI/polyglot-ko-1.3b \
-   --output_dir ./trained_sft_models \
+   --model_name_or_path Qwen/Qwen2-1.5B-Instruct \
+   --model_template qwen2 \
+   --output_dir ./storage/trained_sft_models \
    --save_strategy epoch \
    --save_steps 500 \
    --num_train_epochs 1 \

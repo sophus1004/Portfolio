@@ -12,11 +12,9 @@ from trl import SFTTrainer, DataCollatorForCompletionOnlyLM
 
 from datasets import load_dataset
 
-from prompt_template import SelectPrompt
+from prompter import Prompter
 
 def main():
-
-    prompt = SelectPrompt('llama3_prompt')
 
     args = parse_args()
 
@@ -25,9 +23,8 @@ def main():
     lora_args = args[2]
     training_args = args[3]
 
-    system_prompt_no_doc = prompt['system_prompt_no_doc']
-    assistant_prompt = prompt['assistant_prompt']
-    prompt_input = system_prompt_no_doc + "{instruction}" + assistant_prompt + "{output}" + "{eos_token}"
+    model_template = model_args.model_template
+    sysem_prompt = model_args.sysem_prompt
 
     model_name_or_path = model_args.model_name_or_path
     data_name_or_path = model_args.data_name_or_path
@@ -87,12 +84,14 @@ def main():
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"]=True
 
+    prompter = Prompter()
+    generated_prompt, response_template= prompter.prompt_generator(tokenizer=tokenizer, model_template=model_template, sysem_prompt=sysem_prompt)
+
     if use_lora == True or use_qlora == True:
         model = get_peft_model(model, lora_config)
-        model.print_trainable_parameters()
 
     data_collator = DataCollatorForCompletionOnlyLM(
-        response_template=assistant_prompt,
+        response_template=response_template,
         tokenizer=tokenizer, mlm=False
         )
 
@@ -101,23 +100,22 @@ def main():
         args=input_training_args,
         train_dataset=train_ds,
         max_seq_length=2048,
-        formatting_func=lambda example: formatting_prompts_func(tokenizer, example, prompt_input=prompt_input),
+        formatting_func=lambda example: formatting_prompts_func(example, generated_prompt=generated_prompt),
         data_collator=data_collator
         )
-
-    print(json.dumps(asdict(training_mode_args), indent=4)[1:-1])
-    print(json.dumps(asdict(model_args), indent=4)[1:-1])
-    print(json.dumps(asdict(lora_args), indent=4)[1:-1],)
-    print(json.dumps(asdict(training_args), indent=4)[1:-1])
+    print("-- 입력 프롬프트 ----------\n\n", generated_prompt, "\n\n-- 학습 설정 ----------")
+    print(json.dumps(asdict(training_mode_args), indent=0)[1:-1])
+    print(json.dumps(asdict(model_args), indent=0)[1:-1])
+    print(json.dumps(asdict(lora_args), indent=0)[1:-1])
+    print(json.dumps(asdict(training_args), indent=0)[1:-1], "\n")
 
     trainer.train()
 
-def formatting_prompts_func(tokenizer, example, prompt_input):
+def formatting_prompts_func(example, generated_prompt):
 
-    output_texts = list(map(lambda inst, out, eos: prompt_input.format(instruction=inst, output=out, eos_token=eos), 
+    output_texts = list(map(lambda inst, out: generated_prompt.format(instruction=inst, output=out), 
                             example['instruction'], 
-                            example['output'],
-                            tokenizer.eos_token))
+                            example['output']))
     return output_texts
 
 

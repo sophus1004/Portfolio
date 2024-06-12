@@ -28,6 +28,13 @@ class ModelArguments:
     model_name_or_path: str = field(
         metadata={"help": "The name or path to the pretrained model."}
     )
+    model_template: str = field(
+        metadata={"help": "The prompt template to be used for fine-tuning or inference."}
+    )
+    sysem_prompt: str = field(
+        default=None,
+        metadata={"help": "The sysem prompt template to be used for fine-tuning or inference."}
+    )
 
 @dataclass
 class TrainingArguments:
