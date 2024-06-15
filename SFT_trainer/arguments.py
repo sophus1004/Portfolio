@@ -1,10 +1,7 @@
-import json
-
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from typing import Optional
 from transformers import HfArgumentParser
 
-# Step 1: Define the data class
 @dataclass
 class TrainingModeArguments:
     use_lora: bool = field(
@@ -102,35 +99,7 @@ class LoRAArguments:
         metadata={"help": "Target modules for LoRA. If None, apply LoRA to all layers. Default is 'all-linear'."}
     )
 
-# Example usage with HfArgumentParser
-parser = HfArgumentParser((ModelArguments, TrainingArguments, TrainingModeArguments, LoRAArguments))
-
-# Parse command line arguments (example_args would be replaced by actual command line args)
-example_args = [
-    "--model_name_or_path", "bert-base-uncased",
-    "--torch_dtype", "float16",
-    "--use_lora", "False",
-    "--use_qlora", "False",
-    "--gradient_checkpointing", "True",
-    "--output_dir", "./output",
-    "--save_strategy", "epoch",
-    "--save_steps", "100",
-    "--num_train_epochs", "3",
-    "--logging_steps", "10",
-    "--per_device_train_batch_size", "16",
-    "--gradient_accumulation_steps", "4",
-    "--warmup_steps", "100",
-    "--learning_rate", "3e-5",
-    "--weight_decay", "0.01",
-    "--mixed_precision", "fp16",
-    "--lora_r", "32",
-    "--lora_alpha", "64",
-    "--lora_dropout", "0.1",
-    "--lora_target_modules", "encoder,decoder"
-]
-
-# Create the parser
-parser = HfArgumentParser((TrainingModeArguments, ModelArguments, LoRAArguments, TrainingArguments))
-
 def parse_args():
+    parser = HfArgumentParser((TrainingModeArguments, ModelArguments, LoRAArguments, TrainingArguments))
+
     return parser.parse_args_into_dataclasses()

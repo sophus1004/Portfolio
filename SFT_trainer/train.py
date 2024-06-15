@@ -1,10 +1,14 @@
 import json
 from arguments import parse_args
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict
+
+from rich.console import Console
+from rich.panel import Panel
+from rich.align import Align
+from rich.json import JSON
 
 import torch
 
-from transformers import HfArgumentParser
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers import TrainingArguments, BitsAndBytesConfig
 from peft import LoraConfig, get_peft_model
@@ -29,6 +33,7 @@ def main():
     model_name_or_path = model_args.model_name_or_path
     data_name_or_path = model_args.data_name_or_path
     train_ds = load_dataset(data_name_or_path)['train']
+    train_ds = train_ds.select(range(50))
 
     use_lora = training_mode_args.use_lora
     use_qlora = training_mode_args.use_qlora
@@ -48,6 +53,7 @@ def main():
         lr_scheduler_type="cosine",
         bf16=True if training_args.mixed_precision == 'bf16' else None,
         fp16=True if training_args.mixed_precision == 'fp16' else None,
+        save_only_model=True
         )
     
     if use_lora == True or use_qlora == True:
@@ -104,20 +110,48 @@ def main():
         data_collator=data_collator
         )
     
-    print("-- 입력 프롬프트 ----------\n\n", generated_prompt, "\n\n-- 학습 설정 ----------")
-    print(json.dumps(asdict(training_mode_args), indent=0)[1:-1])
-    print(json.dumps(asdict(model_args), indent=0)[1:-1])
-    print(json.dumps(asdict(lora_args), indent=0)[1:-1])
-    print(json.dumps(asdict(training_args), indent=0)[1:-1], "\n")
+    print_args(generated_prompt, training_mode_args, model_args, lora_args, training_args)
 
     trainer.train()
 
-def formatting_prompts_func(example, generated_prompt):
+    print_result()
 
+
+def formatting_prompts_func(example, generated_prompt):
     output_texts = list(map(lambda inst, out: generated_prompt.format(instruction=inst, output=out), 
                             example['instruction'], 
                             example['output']))
     return output_texts
+
+
+def print_args(generated_prompt, training_mode_args, model_args, lora_args, training_args):
+    console = Console()
+
+    input_prompt_message = Align.left(f"\n{generated_prompt}")
+    input_prompt_panel = Panel(input_prompt_message, title="Input Prompt", border_style="bold", width=80)
+
+    combined_settings = {
+        "Training Mode Args": asdict(training_mode_args),
+        "Model Args": asdict(model_args),
+        "Lora Args": asdict(lora_args),
+        "Training Args": asdict(training_args)
+    }
+
+    if training_mode_args.use_lora == False and training_mode_args.use_qlora == False:
+        del combined_settings["Lora Args"]
+
+    combined_settings_message = JSON(json.dumps(combined_settings, indent=4))
+    combined_settings_panel = Panel(combined_settings_message, title="Training Settings", border_style="bold", width=80)
+
+    console.print("\n", input_prompt_panel, "\n")
+    console.print(combined_settings_panel, "\n")
+
+
+def print_result():
+    console = Console()
+
+    result_message = Align.center("Training has successfully completed.")
+    console.print("\n", Panel(result_message, title="Success", border_style="bold", width=50, height=3), "\n")
 
 
 if __name__ == "__main__":
