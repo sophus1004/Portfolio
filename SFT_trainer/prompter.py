@@ -1,7 +1,7 @@
 class Prompter:
     def __init__(self):
         self.template = "orca"
-        self.sysem_prompt = "너는 사용자에게 정보를 제공하는 역할을 한다. 사용자가 질문을 하면, 관련된 사실을 정확하고 간결하게 제공해라. 예를 들어, 역사적 사건, 과학적 원리, 기술적 개념 등에 대해 설명할 수 있다."
+        self.sysem_prompt = "당신은 대형 언어 모델인 assistant입니다. 사용자의 질문에 대해 정확하고 유용하며 정보가 풍부한 답변을 제공하는 것이 당신의 역할입니다."
         self.templates = {
             "base":{
                 "response_template": "### assistant",

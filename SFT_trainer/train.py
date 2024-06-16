@@ -33,7 +33,6 @@ def main():
     model_name_or_path = model_args.model_name_or_path
     data_name_or_path = model_args.data_name_or_path
     train_ds = load_dataset(data_name_or_path)['train']
-    train_ds = train_ds.select(range(50))
 
     use_lora = training_mode_args.use_lora
     use_qlora = training_mode_args.use_qlora

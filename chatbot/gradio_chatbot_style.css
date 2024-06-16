@@ -1,0 +1,8 @@
+/* styles.css */
+.fixed-width { 
+    max-width: 1000px; 
+    margin: auto; 
+}
+.fixed-button {
+    max-width: 100px;
+}
