@@ -1,6 +1,6 @@
 #SFT 실행
 
-python SFT_trainer/train.py \
+python step1_sft_trainer/train.py \
    --use_lora True \
    --use_qlora False \
    --gradient_checkpointing False \
