@@ -36,7 +36,7 @@ def main():
 
     use_lora = training_mode_args.use_lora
     use_qlora = training_mode_args.use_qlora
-    gradient_checkpointing=training_mode_args.gradient_checkpointing
+    gradient_checkpointing = training_mode_args.gradient_checkpointing
     input_training_args = TrainingArguments(
         output_dir=training_args.output_dir,
         save_strategy=training_args.save_strategy,
