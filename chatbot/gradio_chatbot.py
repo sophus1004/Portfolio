@@ -47,7 +47,8 @@ def main():
                 with gr.Row():
                     chat_undo_button = gr.Button("Undo")
                 with gr.Row():
-                    gr.Checkbox(label="RAG")
+                    gr.Markdown("")
+                    #gr.Checkbox(label="RAG")
 
             with gr.Row():
                 chat_message = gr.Textbox(show_label=False, placeholder="Type a message...", min_width=1000)
@@ -100,7 +101,10 @@ def main():
                     rag_inference_button = gr.Button(value="Inference")
 
             with gr.Row():
-                rag_inference_output = gr.Textbox(label="Result")
+                with gr.Row():
+                    rag_inference_output = gr.Textbox(label="Result")
+                with gr.Row():
+                    no_rag_inference_output = gr.Textbox(label="Result")
 
             rag_reset_button.click(chatbot.rag_reset,
                             inputs=[rag_system_prompt],
@@ -109,7 +113,7 @@ def main():
             rag_input.change(chatbot.retrieval, inputs=rag_input, outputs=[rag_doc_1, rag_doc_2, rag_doc_3])
             rag_inference_button.click(chatbot.rag_inference, 
                             inputs=[rag_applied_system_prompt, rag_input, rag_repetition_penalty, rag_temperature, rag_top_p, rag_selected_doc, rag_doc_1, rag_doc_2, rag_doc_3],
-                            outputs=rag_inference_output)
+                            outputs=[rag_inference_output, no_rag_inference_output])
 
     demo.launch(share=True)
 

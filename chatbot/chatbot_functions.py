@@ -81,37 +81,47 @@ class ChatbotFunctions:
             "Document 3": rag_doc_3
         }
         
-        conversation = [{"role": "system", "content": applied_system_prompt},
-                        {"role": "document", "content": documents[rag_selected_doc]},
-                        {"role": "user", "content": rag_input}]
+        rag_conversation = [
+            [
+                {"role": "system", "content": applied_system_prompt},
+                {"role": "document", "content": documents[rag_selected_doc]},
+                {"role": "user", "content": rag_input}],
+            [
+                {"role": "system", "content": applied_system_prompt},
+                {"role": "user", "content": rag_input}]
+            ]
 
-        input_ids = self.tokenizer.apply_chat_template(
-            conversation,
-            add_generation_prompt=True,
-            tokenize=True,
-            return_tensors="pt"
-            ).to(self.model.device)
-        
-        outputs = self.model.generate(
-            input_ids,
-            max_new_tokens=self.max_new_tokens,
-            eos_token_id=self.tokenizer.eos_token_id,
-            repetition_penalty=float(repetition_penalty),
-            do_sample=True,
-            temperature=float(temperature),
-            top_p=top_p
-            )
+        result = []
 
-        response = outputs[0][input_ids.shape[-1]:]
-        response = self.tokenizer.decode(response, skip_special_tokens=True)
+        for conversation in rag_conversation:
+            input_ids = self.tokenizer.apply_chat_template(
+                conversation,
+                add_generation_prompt=True,
+                tokenize=True,
+                return_tensors="pt"
+                ).to(self.model.device)
+            
+            outputs = self.model.generate(
+                input_ids,
+                max_new_tokens=self.max_new_tokens,
+                eos_token_id=self.tokenizer.eos_token_id,
+                repetition_penalty=float(repetition_penalty),
+                do_sample=True,
+                temperature=float(temperature),
+                top_p=top_p
+                )
 
-        for item in conversation:
+            response = outputs[0][input_ids.shape[-1]:]
+            response = self.tokenizer.decode(response, skip_special_tokens=True)
+            result.append(response)
+
+        for item in rag_conversation[0]:
             print(item)
         print("")
         print("--------------------------")
         print("")
         
-        return response
+        return result[0], result[1]
 
     def chat_reset(self, system_prompt):
         history = []
