@@ -1,10 +1,15 @@
 import gradio as gr
 from arguments import parse_args
 
+import explanation
 from chatbot_functions import ChatbotFunctions
 
 
 def main():
+
+    main_md = explanation.main_md()
+    multiturn_chatbot_md = explanation.multiturn_chatbot_md()
+    RAG_md = explanation.RAG_md()
 
     args = parse_args()
 
@@ -24,7 +29,9 @@ def main():
                                )
 
     with gr.Blocks() as demo:
+        gr.Markdown(main_md)
         with gr.Tab("Multiturn Chatbot"):
+            gr.Markdown(multiturn_chatbot_md)
             with gr.Row():
                 chat_system_prompt = gr.Textbox(label="System Prompt", value=default_chat_system_prompt, interactive=True, min_width=800)
                 chat_applied_system_prompt = gr.Textbox(label="Applied system prompt", value=default_chat_system_prompt, interactive=False, visible=False)
@@ -71,7 +78,7 @@ def main():
                             outputs=[chat_chatbot, chat_message])
 
         with gr.Tab("RAG"):
-            gr.Markdown("# Welcome to the Greeting App")
+            gr.Markdown(RAG_md)
             with gr.Row():
                 rag_system_prompt = gr.Textbox(label="System Prompt", value=default_rag_system_prompt, interactive=True, min_width=800)
                 rag_applied_system_prompt = gr.Textbox(label="Applied system prompt", value=default_rag_system_prompt, interactive=False, visible=False)
