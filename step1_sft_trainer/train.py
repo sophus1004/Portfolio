@@ -10,9 +10,9 @@ from rich.json import JSON
 import torch
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from transformers import TrainingArguments, BitsAndBytesConfig
+from transformers import BitsAndBytesConfig
 from peft import LoraConfig, get_peft_model
-from trl import SFTTrainer, DataCollatorForCompletionOnlyLM
+from trl import SFTTrainer, SFTConfig, DataCollatorForCompletionOnlyLM
 
 from datasets import load_dataset
 
@@ -37,7 +37,7 @@ def main():
     use_lora = training_mode_args.use_lora
     use_qlora = training_mode_args.use_qlora
     gradient_checkpointing = training_mode_args.gradient_checkpointing
-    input_training_args = TrainingArguments(
+    training_args = SFTConfig(
         output_dir=training_args.output_dir,
         save_strategy=training_args.save_strategy,
         save_steps=training_args.save_steps,
@@ -52,6 +52,7 @@ def main():
         lr_scheduler_type="cosine",
         bf16=True if training_args.mixed_precision == 'bf16' else None,
         fp16=True if training_args.mixed_precision == 'fp16' else None,
+        max_seq_length=2048,
         save_only_model=True
         )
     
@@ -102,9 +103,8 @@ def main():
 
     trainer = SFTTrainer(
         model=model,
-        args=input_training_args,
+        args=training_args,
         train_dataset=train_ds,
-        max_seq_length=2048,
         formatting_func=lambda example: formatting_prompts_func(example, generated_prompt=generated_prompt),
         data_collator=data_collator
         )
