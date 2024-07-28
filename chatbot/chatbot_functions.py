@@ -19,8 +19,8 @@ class ChatbotFunctions:
 
         self.max_new_tokens = 512
     
-    def chat_respond(self, applied_system_prompt, message, repetition_penalty, temperature, top_p, history):
-        conversation = [{"role": "system", "content": applied_system_prompt}]
+    def chat_respond(self, use_system_prompt, applied_system_prompt, message, repetition_penalty, temperature, top_p, history):
+        conversation = [{"role": "system", "content": applied_system_prompt}] if use_system_prompt is True else []
         conversation_len = len(history[-5:])
 
         for idx in range(conversation_len):
@@ -74,7 +74,9 @@ class ChatbotFunctions:
 
         return result_1, result_2, result_3
 
-    def rag_inference(self, applied_system_prompt, rag_input, repetition_penalty, temperature, top_p, rag_selected_doc, rag_doc_1, rag_doc_2, rag_doc_3):
+    def rag_inference(self, use_system_prompt, applied_system_prompt, rag_input, repetition_penalty, temperature, top_p, rag_selected_doc, rag_doc_1, rag_doc_2, rag_doc_3):
+        system_prompt = [{"role": "system", "content": applied_system_prompt}] if use_system_prompt is True else []
+
         documents = {
             "Document 1": rag_doc_1,
             "Document 2": rag_doc_2,
@@ -83,11 +85,9 @@ class ChatbotFunctions:
         
         rag_conversation = [
             [
-                {"role": "system", "content": applied_system_prompt},
                 {"role": "document", "content": documents[rag_selected_doc]},
                 {"role": "user", "content": rag_input}],
             [
-                {"role": "system", "content": applied_system_prompt},
                 {"role": "user", "content": rag_input}]
             ]
 
@@ -95,7 +95,7 @@ class ChatbotFunctions:
 
         for conversation in rag_conversation:
             input_ids = self.tokenizer.apply_chat_template(
-                conversation,
+                system_prompt + conversation,
                 add_generation_prompt=True,
                 tokenize=True,
                 return_tensors="pt"

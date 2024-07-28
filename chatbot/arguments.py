@@ -20,6 +20,10 @@ class ChatbotArguments:
         default="당신은 대형 언어 모델인 assistant입니다. user의 질문에 대해 document 내용을 참고해서 정확하게 답변해야 합니다.",
         metadata={"help": "The name or path to the chatbot model."}
     )
+    use_system_prompt: bool = field(
+        default=True,
+        metadata={"help": "Whether to use the system prompt template for fine-tuning or inference."}
+    )
 
 def parse_args():
     parser = HfArgumentParser(ChatbotArguments)
