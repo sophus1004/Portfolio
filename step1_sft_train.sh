@@ -6,7 +6,7 @@ python step1_sft_trainer/train.py \
    --gradient_checkpointing False \
    --data_name_or_path maywell/ko_wikidata_QA \
    --model_name_or_path Qwen/Qwen2-1.5B-Instruct \
-   --model_template qwen2 \
+   --use_system_prompt True \
    --output_dir ./storage/trained_sft_models \
    --save_strategy epoch \
    --save_steps 500 \

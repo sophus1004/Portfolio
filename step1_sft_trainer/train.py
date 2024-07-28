@@ -27,8 +27,10 @@ def main():
     lora_args = args[2]
     training_args = args[3]
 
-    model_template = model_args.model_template
-    system_prompt = model_args.system_prompt
+    use_system_prompt = model_args.use_system_prompt
+
+    default_system_prompt = "당신은 대형 언어 모델인 assistant입니다. 사용자의 질문에 대해 정확하고 유용하며 정보가 풍부한 답변을 제공하는 것이 당신의 역할입니다."
+    system_prompt = model_args.system_prompt if model_args.system_prompt is not None else default_system_prompt
 
     model_name_or_path = model_args.model_name_or_path
     data_name_or_path = model_args.data_name_or_path
@@ -91,7 +93,8 @@ def main():
     tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"]=True
 
     prompter = Prompter()
-    generated_prompt, response_template= prompter.prompt_generator(tokenizer=tokenizer, model_template=model_template, system_prompt=system_prompt)
+    generated_prompt, response_template= prompter.prompt_generator(tokenizer=tokenizer, use_system_prompt=use_system_prompt)
+    generated_prompt = generated_prompt.format(system=system_prompt, instruction="{instruction}", output="{output}")
 
     if use_lora == True or use_qlora == True:
         model = get_peft_model(model, lora_config)

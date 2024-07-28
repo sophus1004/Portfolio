@@ -25,12 +25,13 @@ class ModelArguments:
     model_name_or_path: str = field(
         metadata={"help": "The name or path to the pretrained model."}
     )
-    model_template: str = field(
-        metadata={"help": "The prompt template to be used for fine-tuning or inference."}
-    )
     system_prompt: str = field(
         default=None,
         metadata={"help": "The system_prompt prompt template to be used for fine-tuning or inference."}
+    )
+    use_system_prompt: bool = field(
+        default=True,
+        metadata={"help": "Whether to use the system prompt template for fine-tuning or inference."}
     )
 
 @dataclass

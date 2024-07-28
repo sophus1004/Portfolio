@@ -1,25 +1,18 @@
 class Prompter:
     def __init__(self):
-        self.system_prompt = "당신은 대형 언어 모델인 assistant입니다. 사용자의 질문에 대해 정확하고 유용하며 정보가 풍부한 답변을 제공하는 것이 당신의 역할입니다."
         self.templates = {
             "default":[
                 {"role": "system", "content": "{system}"},
                 {"role": "user", "content": "{instruction}"},
                 {"role": "assistant", "content": "{output}"}
             ],
-            "gemma-2":[
+            "no_system_prompt":[
                 {"role": "user", "content": "{instruction}"},
                 {"role": "assistant", "content": "{output}"}
             ]
         }
-        self.response_template = {
-            "default": "### assistant",
-            "llama-3": "<|start_header_id|>assistant<|end_header_id|>",
-            "gemma-2": "<start_of_turn>model",
-            "qwen2": "<|im_start|>assistant"
-        }
 
-    def prompt_generator(self, tokenizer, model_template, system_prompt):
+    def prompt_generator(self, tokenizer, use_system_prompt):
         if tokenizer.chat_template is None:
             tokenizer.chat_template = (
                 "{% for message in messages %}"
@@ -28,16 +21,12 @@ class Prompter:
                 "{% endif %}"
                 "{{'### ' + message['role'] + '\n' + message['content'] + '\n\n'}}"
                 "{% endfor %}"
-                "{% if add_generation_prompt %}{{ 'assistant\n' }}{% endif %}"
+                "{% if add_generation_prompt %}{{ '### assistant\n' }}{% endif %}"
             )
 
-        if system_prompt is None:
-            system_prompt = self.system_prompt
-
-        template = self.templates.get(model_template, self.templates['default'])
+        template = self.templates['no_system_prompt'] if use_system_prompt is False else self.templates['default']
         prompt = tokenizer.apply_chat_template(template, tokenize=False)
-        prompt = prompt.format(system=system_prompt, instruction="{instruction}", output="{output}")
 
-        response_template = self.response_template.get(model_template, self.response_template["default"])
+        response_template = tokenizer.apply_chat_template(template, tokenize=False, add_generation_prompt=True).replace(prompt, "")
 
         return prompt, response_template
