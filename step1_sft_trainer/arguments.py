@@ -28,9 +28,9 @@ class ModelArguments:
     model_template: str = field(
         metadata={"help": "The prompt template to be used for fine-tuning or inference."}
     )
-    sysem_prompt: str = field(
+    system_prompt: str = field(
         default=None,
-        metadata={"help": "The sysem prompt template to be used for fine-tuning or inference."}
+        metadata={"help": "The system_prompt prompt template to be used for fine-tuning or inference."}
     )
 
 @dataclass

@@ -28,7 +28,7 @@ def main():
     training_args = args[3]
 
     model_template = model_args.model_template
-    sysem_prompt = model_args.sysem_prompt
+    system_prompt = model_args.system_prompt
 
     model_name_or_path = model_args.model_name_or_path
     data_name_or_path = model_args.data_name_or_path
@@ -91,7 +91,7 @@ def main():
     tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"]=True
 
     prompter = Prompter()
-    generated_prompt, response_template= prompter.prompt_generator(tokenizer=tokenizer, model_template=model_template, sysem_prompt=sysem_prompt)
+    generated_prompt, response_template= prompter.prompt_generator(tokenizer=tokenizer, model_template=model_template, system_prompt=system_prompt)
 
     if use_lora == True or use_qlora == True:
         model = get_peft_model(model, lora_config)
