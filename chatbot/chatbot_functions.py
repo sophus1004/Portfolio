@@ -11,6 +11,8 @@ class ChatbotFunctions:
         self.default_chat_system_prompt = default_chat_system_prompt
         self.default_rag_system_prompt = default_rag_system_prompt
 
+        self.rag_template = """\n\n아래 문서를 참고해서 대답하세요.\n{document}"""
+
         self.model = AutoModelForCausalLM.from_pretrained(chatbot_model_name_or_path, torch_dtype='auto', device_map='auto')
         self.tokenizer = AutoTokenizer.from_pretrained(chatbot_model_name_or_path)
         self.embedder = SentenceTransformer(rag_embedder_name_or_path)
@@ -84,18 +86,19 @@ class ChatbotFunctions:
         }
         
         rag_conversation = [
-            [
-                {"role": "document", "content": documents[rag_selected_doc]},
-                {"role": "user", "content": rag_input}],
-            [
-                {"role": "user", "content": rag_input}]
+            system_prompt + [
+                {"role": "user", "content": rag_input+self.rag_template.format(document=documents[rag_selected_doc])}
+                ],
+             system_prompt + [
+                {"role": "user", "content": rag_input}
+                ]
             ]
 
         result = []
 
         for conversation in rag_conversation:
             input_ids = self.tokenizer.apply_chat_template(
-                system_prompt + conversation,
+                conversation,
                 add_generation_prompt=True,
                 tokenize=True,
                 return_tensors="pt"
@@ -136,7 +139,7 @@ class ChatbotFunctions:
             return gr.update(value=self.default_rag_system_prompt), gr.update(value=self.default_rag_system_prompt), gr.update(value="")
         
         else:
-            return gr.update(value=system_prompt), gr.update(value=system_prompt), gr.update(value="")
+            return gr.update(value=system_prompt), gr.update(value=system_prompt), gr.update(value=""), gr.update(value="")
         
     def retry(self, system_prompt, repetition_penalty, temperature, top_p, history):
         if not history:

@@ -31,13 +31,12 @@ def main():
 
     with gr.Blocks() as demo:
         gr.Markdown(main_md)
-        use_system_prompt = gr.Checkbox(value=use_system_prompt, label="Use system prompt", visible=False)
         with gr.Tab("Multiturn Chatbot"):
             gr.Markdown(multiturn_chatbot_md)
             with gr.Row():
-                chat_system_prompt = gr.Textbox(label="System Prompt", value=default_chat_system_prompt, interactive=True, min_width=800, visible=True if use_system_prompt is True else False)
+                chat_system_prompt = gr.Textbox(label="System Prompt", value=default_chat_system_prompt, interactive=True, min_width=800, visible=use_system_prompt)
                 chat_applied_system_prompt = gr.Textbox(label="Applied system prompt", value=default_chat_system_prompt, interactive=False, visible=False)
-                chat_reset_button = gr.ClearButton(value="Reset", visible=True if use_system_prompt is True else False)
+                chat_reset_button = gr.ClearButton(value="Reset", visible=use_system_prompt)
 
             with gr.Row():
                 chat_chatbot = gr.Chatbot()
@@ -76,15 +75,15 @@ def main():
                             outputs=[chat_chatbot, chat_message])
             
             chat_send_button.click(chatbot.chat_respond, 
-                            inputs=[use_system_prompt, chat_applied_system_prompt, chat_message, chat_repetition_penalty, chat_temperature, chat_top_p, chat_chatbot], 
+                            inputs=[gr.State(use_system_prompt), chat_applied_system_prompt, chat_message, chat_repetition_penalty, chat_temperature, chat_top_p, chat_chatbot], 
                             outputs=[chat_chatbot, chat_message])
 
         with gr.Tab("RAG"):
             gr.Markdown(RAG_md)
             with gr.Row():
-                rag_system_prompt = gr.Textbox(label="System Prompt", value=default_rag_system_prompt, interactive=True, min_width=800, visible=True if use_system_prompt is True else False)
+                rag_system_prompt = gr.Textbox(label="System Prompt", value=default_rag_system_prompt, interactive=True, min_width=800, visible=use_system_prompt)
                 rag_applied_system_prompt = gr.Textbox(label="Applied system prompt", value=default_rag_system_prompt, interactive=False, visible=False)
-                rag_reset_button = gr.ClearButton(value="Reset", visible=True if use_system_prompt is True else False)
+                rag_reset_button = gr.ClearButton(value="Reset", visible=use_system_prompt)
 
             with gr.Row():
                 with gr.Row():
@@ -117,11 +116,11 @@ def main():
 
             rag_reset_button.click(chatbot.rag_reset,
                             inputs=[rag_system_prompt],
-                            outputs=[rag_system_prompt, rag_applied_system_prompt, rag_inference_output])
+                            outputs=[rag_system_prompt, rag_applied_system_prompt, rag_inference_output, no_rag_inference_output])
 
             rag_input.change(chatbot.retrieval, inputs=rag_input, outputs=[rag_doc_1, rag_doc_2, rag_doc_3])
             rag_inference_button.click(chatbot.rag_inference, 
-                            inputs=[use_system_prompt, rag_applied_system_prompt, rag_input, rag_repetition_penalty, rag_temperature, rag_top_p, rag_selected_doc, rag_doc_1, rag_doc_2, rag_doc_3],
+                            inputs=[gr.State(use_system_prompt), rag_applied_system_prompt, rag_input, rag_repetition_penalty, rag_temperature, rag_top_p, rag_selected_doc, rag_doc_1, rag_doc_2, rag_doc_3],
                             outputs=[rag_inference_output, no_rag_inference_output])
 
     demo.launch(share=True)
