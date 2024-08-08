@@ -21,6 +21,10 @@ class ModelArguments:
     model_name_or_path: str = field(
         metadata={"help": "The name or path to the pretrained model."}
     )
+    attention_implementation: str = field(
+        default='sdpa',
+        metadata={"help": "The specific implementation of the attention mechanism to use."}
+    )
     system_prompt: str = field(
         default=None,
         metadata={"help": "The system_prompt prompt template to be used for fine-tuning or inference."}

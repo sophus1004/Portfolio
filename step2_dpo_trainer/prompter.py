@@ -33,8 +33,7 @@ class Prompter:
             assistant_template = tokenizer.apply_chat_template(self.templates["assistant"], tokenize=False).replace(system_template, "")
 
         else:
-            system_template = tokenizer.apply_chat_template(self.templates["system"], tokenize=False)
-            user_template = tokenizer.apply_chat_template(self.templates["user"], tokenize=False).replace(system_template, "")
-            assistant_template = tokenizer.apply_chat_template(self.templates["assistant"], tokenize=False).replace(system_template, "")
+            user_template = tokenizer.apply_chat_template([item for item in self.templates["user"] if item["role"] == "user"], tokenize=False)
+            assistant_template = tokenizer.apply_chat_template([item for item in self.templates["assistant"] if item["role"] == "assistant"], tokenize=False)
 
         return user_template, assistant_template

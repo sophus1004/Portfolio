@@ -36,8 +36,8 @@ def main():
 
     model_name_or_path = model_args.model_name_or_path
     data_name_or_path = model_args.data_name_or_path
+    attn_implementation = model_args.attention_implementation
     train_ds = load_dataset(data_name_or_path)['train']
-    train_ds = train_ds.select(range(100))
 
     use_qlora = training_mode_args.use_qlora
     gradient_checkpointing = training_mode_args.gradient_checkpointing
@@ -83,6 +83,7 @@ def main():
     model = AutoModelForCausalLM.from_pretrained(
         model_name_or_path,
         torch_dtype=torch.float32 if not use_qlora == True else 'auto',
+        attn_implementation=attn_implementation,
         quantization_config=bnb_config if use_qlora == True else None,
         device_map='auto'
         )

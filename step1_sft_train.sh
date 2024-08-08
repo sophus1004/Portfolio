@@ -5,11 +5,11 @@ python step1_sft_trainer/train.py \
    --use_qlora False \
    --gradient_checkpointing False \
    --data_name_or_path maywell/ko_wikidata_QA \
-   --model_name_or_path Qwen/Qwen2-1.5B-Instruct \
-   --use_system_prompt True \
+   --model_name_or_path google/gemma-2-2b-it \
+   --attention_implementation eager \
+   --use_system_prompt False \
    --output_dir ./storage/trained_sft_models \
    --save_strategy epoch \
-   --save_steps 500 \
    --num_train_epochs 1 \
    --logging_steps 1 \
    --per_device_train_batch_size 1 \
