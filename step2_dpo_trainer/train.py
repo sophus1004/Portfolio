@@ -105,7 +105,7 @@ def main():
     user_template, assistant_template = prompter.prompt_generator(tokenizer=tokenizer, use_system_prompt=use_system_prompt)
 
     if use_system_prompt is True:
-        user_template = user_template.format(system=system_prompt, instruction="{instruction}", output="{output}")
+        user_template = user_template.format(system=system_prompt, instruction="{instruction}")
 
     train_ds = formatting_prompts_func(train_ds, user_template, assistant_template)
 

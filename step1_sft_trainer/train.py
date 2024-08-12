@@ -96,7 +96,9 @@ def main():
 
     prompter = Prompter()
     generated_prompt, response_template= prompter.prompt_generator(tokenizer=tokenizer, use_system_prompt=use_system_prompt)
-    generated_prompt = generated_prompt.format(system=system_prompt, instruction="{instruction}", output="{output}")
+
+    if use_system_prompt is True:
+        generated_prompt = generated_prompt.format(system=system_prompt, instruction="{instruction}", output="{output}")
 
     if use_lora == True or use_qlora == True:
         model = get_peft_model(model, lora_config)
