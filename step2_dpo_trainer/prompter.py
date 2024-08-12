@@ -1,16 +1,13 @@
 class Prompter:
     def __init__(self):
-        self.system_prompt = "당신은 대형 언어 모델인 assistant입니다. 사용자의 질문에 대해 정확하고 유용하며 정보가 풍부한 답변을 제공하는 것이 당신의 역할입니다."
         self.templates = {
-            "system":[
-                {"role": "system", "content": "{system}"}
-            ],
-            "user":[
+            "default":[
                 {"role": "system", "content": "{system}"},
-                {"role": "user", "content": "{instruction}"}
+                {"role": "user", "content": "{instruction}"},
+                {"role": "assistant", "content": "{output}"}
             ],
-            "assistant":[
-                {"role": "system", "content": "{system}"},
+            "no_system_prompt":[
+                {"role": "user", "content": "{instruction}"},
                 {"role": "assistant", "content": "{output}"}
             ]
         }
@@ -28,12 +25,11 @@ class Prompter:
             )
 
         if use_system_prompt is True:
-            system_template = tokenizer.apply_chat_template(self.templates["system"], tokenize=False)
-            user_template = tokenizer.apply_chat_template(self.templates["user"], tokenize=False)
-            assistant_template = tokenizer.apply_chat_template(self.templates["assistant"], tokenize=False).replace(system_template, "")
+            prompt = tokenizer.apply_chat_template(self.templates["default"], tokenize=False)
+            prompt = prompt.split("{output}")
 
         else:
-            user_template = tokenizer.apply_chat_template([item for item in self.templates["user"] if item["role"] == "user"], tokenize=False)
-            assistant_template = tokenizer.apply_chat_template([item for item in self.templates["assistant"] if item["role"] == "assistant"], tokenize=False)
+            prompt = tokenizer.apply_chat_template(self.templates["no_system_prompt"], tokenize=False)
+            prompt = prompt.split("{output}")
 
-        return user_template, assistant_template
+        return prompt[0], "{output}"+prompt[1]
