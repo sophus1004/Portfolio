@@ -43,7 +43,7 @@ bash step1_sft_train.sh
 **SFT GPU 메모리 사용 가이드**
 
 | Model | Mixed Precision | LoRA | QLoRA |
-| --- | --- | --- | --- |
+| :---: | :---: | :---: | :---: |
 | google/gemma-2-2b-it (2048 tokens) | 66GB | 39GB | 25GB |
 | google/gemma-2-2b-it (4096 tokens) | 105GB | 78GB | 63GB |
 | google/gemma-2-2b-it (8192 tokens) | 250GB | 214GB | - |
@@ -53,7 +53,7 @@ bash step1_sft_train.sh
 **SFT GPU 메모리 사용 가이드 with Gradient checkpointing** 
 
 | Model | Mixed Precision | LoRA | QLoRA |
-| --- | --- | --- | --- |
+| :---: | :---: | :---: | :---: |
 | google/gemma-2-2b-it (2048 tokens) | 57GB | 22GB | 12GB |
 | google/gemma-2-2b-it (4096 tokens) | 66GB | 36GB | 26GB |
 | google/gemma-2-2b-it (8192 tokens) | 94GB | 67GB | 58GB |
