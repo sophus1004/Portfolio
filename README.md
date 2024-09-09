@@ -70,7 +70,7 @@ bash step1_sft_train.sh
 bash step2_dpo_train.sh
 ```
 
-**DPO GPU 메모리 사용 가이드**
+**DPO GPU memory usage**
 
 | Model | LoRA | QLoRA |
 | --- | --- | --- |
@@ -80,7 +80,7 @@ bash step2_dpo_train.sh
 | google/gemma-2-9b-it (1024 tokens) | 106GB | 56GB |
 | google/gemma-2-9b-it (2048 tokens) | 186GB | 140GB |
 
-**DPO GPU 메모리 사용 가이드 with Gradient checkpointing**
+**DPO GPU memory usage with Gradient checkpointing**
 
 | Model | LoRA | QLoRA |
 | --- | --- | --- |
