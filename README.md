@@ -40,7 +40,7 @@ huggingface-cli login --token {HF_Access_Tokens}
 bash step1_sft_train.sh
 ```
 
-**SFT GPU 메모리 사용 가이드**
+**SFT GPU memory usage**
 
 | Model | Mixed Precision | LoRA | QLoRA |
 | --- | --- | --- | --- |
@@ -52,7 +52,7 @@ bash step1_sft_train.sh
 | google/gemma-2-9b-it (2048 tokens) | 214GB | 109GB | 59GB |
 | google/gemma-2-9b-it (4096 tokens) | - | 215GB | 152GB |
 
-**SFT GPU 메모리 사용 가이드 with Gradient checkpointing**
+**SFT GPU memory usage with Gradient checkpointing**
 
 | Model | Mixed Precision | LoRA | QLoRA |
 | --- | --- | --- | --- |
