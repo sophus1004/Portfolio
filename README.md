@@ -34,10 +34,10 @@ pip install -r requirements.txt
 huggingface-cli login --token {HF_Access_Tokens}
 ```
 
-### Step 1 - Supervised Fine-Tuning
+### LLM Supervised Fine-Tuning
 
 ```bash
-bash step1_sft_train.sh
+bash llm_sft_train.sh
 ```
 
 **SFT GPU memory usage**
@@ -64,10 +64,12 @@ bash step1_sft_train.sh
 | google/gemma-2-9b-it (2048 tokens) | 190GB | 52GB | 20GB |
 | google/gemma-2-9b-it (4096 tokens) | 200GB | 68GB | 35GB |
 
-### Step 2 - Direct Preference Optimization
+★ GPU 메모리 사용량은 서버 세팅에 따라 변동성이 있으므로 참고만 해주세요.
+
+### LLM Direct Preference Optimization
 
 ```bash
-bash step2_dpo_train.sh
+bash llm_dpo_train.sh
 ```
 
 **DPO GPU memory usage**
@@ -90,6 +92,8 @@ bash step2_dpo_train.sh
 | google/gemma-2-9b-it (1024 tokens) | 54GB | 21GB |
 | google/gemma-2-9b-it (2048 tokens) | 70GB | 35GB |
 | google/gemma-2-9b-it (4096 tokens) | 110GB | 67GB |
+
+★ GPU 메모리 사용량은 서버 세팅에 따라 변동성이 있으므로 참고만 해주세요.
 
 ### Gradio Chatbot
 

@@ -1,15 +1,14 @@
-#SFT 실행
+#DPO 실행
 
 # gemma-2 train set
-python step1_sft_trainer/train.py \
-   --use_lora True \
+python llm_dpo_trainer/train.py \
    --use_qlora False \
    --gradient_checkpointing False \
-   --data_name_or_path maywell/ko_wikidata_QA \
+   --data_name_or_path xinlai/Math-Step-DPO-10K \
    --model_name_or_path google/gemma-2-2b-it \
    --attention_implementation eager \
    --use_system_prompt False \
-   --output_dir ./storage/trained_sft_models \
+   --output_dir ./storage/trained_dpo_models \
    --save_strategy epoch \
    --num_train_epochs 1 \
    --logging_steps 1 \
@@ -18,17 +17,16 @@ python step1_sft_trainer/train.py \
    --warmup_steps 0 \
    --learning_rate 0.00001 \
    --weight_decay 0.0 \
-   --mixed_precision bf16
+   --mixed_precision bf16 \
 
 """
 # Llama-3.1 train set
-python step1_sft_trainer/train.py \
-   --use_lora True \
+python step2_dpo_trainer/train.py \
    --use_qlora False \
    --gradient_checkpointing False \
-   --data_name_or_path maywell/ko_wikidata_QA \
+   --data_name_or_path xinlai/Math-Step-DPO-10K \
    --model_name_or_path meta-llama/Meta-Llama-3.1-8B-Instruct \
-   --output_dir ./storage/trained_sft_models \
+   --output_dir ./storage/trained_dpo_models \
    --save_strategy epoch \
    --num_train_epochs 1 \
    --logging_steps 1 \
@@ -37,5 +35,5 @@ python step1_sft_trainer/train.py \
    --warmup_steps 0 \
    --learning_rate 0.00001 \
    --weight_decay 0.0 \
-   --mixed_precision bf16
+   --mixed_precision bf16 \
 """
