@@ -4,7 +4,7 @@
 python llm_sft_trainer/train.py \
    --use_lora True \
    --use_qlora False \
-   --gradient_checkpointing False \
+   --gradient_checkpointing True \
    --data_name_or_path maywell/ko_wikidata_QA \
    --model_name_or_path google/gemma-2-2b-it \
    --attention_implementation eager \
@@ -27,7 +27,7 @@ python llm_sft_trainer/train.py \
 #    --use_qlora False \
 #    --gradient_checkpointing False \
 #    --data_name_or_path maywell/ko_wikidata_QA \
-#    --model_name_or_path meta-llama/Meta-Llama-3.1-8B-Instruct \
+#    --model_name_or_path meta-llama/Llama-3.2-1B-Instruct \
 #    --output_dir ./storage/trained_sft_models \
 #    --save_strategy epoch \
 #    --num_train_epochs 1 \

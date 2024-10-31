@@ -25,7 +25,7 @@ python llm_dpo_trainer/train.py \
 #    --use_qlora False \
 #    --gradient_checkpointing False \
 #    --data_name_or_path xinlai/Math-Step-DPO-10K \
-#    --model_name_or_path meta-llama/Meta-Llama-3.1-8B-Instruct \
+#    --model_name_or_path meta-llama/Llama-3.2-1B-Instruct \
 #    --output_dir ./storage/trained_dpo_models \
 #    --save_strategy epoch \
 #    --num_train_epochs 1 \
