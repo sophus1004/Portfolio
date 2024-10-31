@@ -26,8 +26,10 @@ class Prompter:
 
         template = self.templates['no_system_prompt'] if use_system_prompt is False else self.templates['default']
         prompt = tokenizer.apply_chat_template(template, tokenize=False)
-        prompt += tokenizer.eos_token if not prompt.endswith(tokenizer.eos_token) else ""
-
+        
         response_template = tokenizer.apply_chat_template(template, tokenize=False, add_generation_prompt=True).replace(prompt, "")
+
+        prompt = prompt.strip()
+        prompt += tokenizer.eos_token if not prompt.endswith(tokenizer.eos_token) else ""
 
         return prompt, response_template
