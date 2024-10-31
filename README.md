@@ -23,8 +23,9 @@
 ### install
 
 ```bash
-git clone https://github.com/sophus1004/portfolio.git
-cd portfolio
+git clone https://github.com/sophus1004/Simple_Tools_for_LLM.git
+cd Simple_Tools_for_LLM
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
